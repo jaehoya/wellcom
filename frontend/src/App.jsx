@@ -28,7 +28,7 @@ function App() {
       <Nav user={user} onLogout={handleLogout} />
       <Routes>
         <Route path="/login" element={<Login onLogin={setUser} />} />
-        <Route path="/register" element={<Register onRegister={setUser} />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/" element={<Home user={user} onLogout={handleLogout} />} />
       </Routes>
     </BrowserRouter>

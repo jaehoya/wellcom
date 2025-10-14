@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../api/axios';
 
-export default function Register({ onRegister }) {
+export default function Register() {
   const [registerForm, setRegisterForm] = useState({ username: '', password: '', email: '' });
   const [registerError, setRegisterError] = useState('');
   const navigate = useNavigate();
@@ -10,21 +11,11 @@ export default function Register({ onRegister }) {
     e.preventDefault();
     setRegisterError('');
     try {
-      const res = await fetch('http://localhost:5000/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(registerForm),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        onRegister({ username: registerForm.username });
-        navigate('/login'); // 회원가입 성공 시 로그인 페이지로 이동
-        console.log('회원가입 성공:', data);
-      } else {
-        setRegisterError(data.message || '회원가입 실패');
-      }
+      const res = await api.post('/register', registerForm);
+      console.log('회원가입 성공:', res.data);
+      navigate('/login'); // 회원가입 성공 시 로그인 페이지로 이동
     } catch (err) {
-      setRegisterError('서버 오류');
+      setRegisterError(err.response?.data?.message || '서버 오류');
     }
   };
 

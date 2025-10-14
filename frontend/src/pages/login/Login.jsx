@@ -11,7 +11,7 @@ export default function Login({ onLogin }) {
     e.preventDefault();
     setLoginError('');
     try {
-      const res = await api.post('/auth/login', loginForm);
+      const res = await api.post('/login', loginForm);
       if (res.data.token) {
         localStorage.setItem('token', res.data.token);
         onLogin({ username: loginForm.username });
