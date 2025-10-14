@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import api from '../../api/axios';
 
 export default function Login({ onLogin }) {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
@@ -11,20 +11,16 @@ export default function Login({ onLogin }) {
     e.preventDefault();
     setLoginError('');
     try {
-      const res = await fetch('http://localhost:5000/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(loginForm),
-      });
-      const data = await res.json();
-      if (res.ok) {
+      const res = await api.post('/auth/login', loginForm);
+      if (res.data.token) {
+        localStorage.setItem('token', res.data.token);
         onLogin({ username: loginForm.username });
         navigate('/'); // 로그인 성공 시 홈으로 이동
       } else {
-        setLoginError(data.message || '로그인 실패');
+        setLoginError(res.data.message || '로그인 실패');
       }
     } catch (err) {
-      setLoginError('서버 오류');
+      setLoginError(err.response?.data?.message || '서버 오류');
     }
   };
 

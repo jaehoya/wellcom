@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const db = require('../models');
 
 const register = async (username, password, email) => {
@@ -27,6 +28,9 @@ const login = async (username, password) => {
         error.status = 401;
         throw error;
     }
+
+    const token = jwt.sign({ id: user.id, username: user.username }, process.env.jwt_secret, { expiresIn: process.env.jwt_expires_in });
+    return token;
 };
 
 module.exports = { register, login };
